@@ -1,20 +1,21 @@
 #include "WidgetMapa.h"
 #include "DialogoSucursal.h"
-#include <QBrush>
+#include <QCoreApplication>
 #include <QDebug>
-#include <QGraphicsPathItem>
-#include <QGraphicsProxyWidget>
-#include <QListWidgetItem>
+#include <QGraphicsEllipseItem>
+#include <QGraphicsLineItem>
+#include <QGraphicsTextItem>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QMessageBox>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QPainterPath>
-#include <QPen>
 #include <QPushButton>
 #include <QRandomGenerator>
-#include <QTime>
+#include <QSettings>
 #include <QTimer>
-#include <QtMath>
+#include <QVBoxLayout>
 #include <cmath>
 
 // Helper Methods
@@ -49,21 +50,32 @@ WidgetMapa::WidgetMapa(QWidget *parent) : QGraphicsView(parent) {
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-  // 1. Fetch Static Map Texture
-  QNetworkAccessManager *nam = new QNetworkAccessManager(this);
-  // Using a generic world map image or fallback
-  QUrl url("https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/"
-           "Aurora_as_seen_by_IMAGE.jpg/1280px-Aurora_as_seen_by_IMAGE.jpg");
+  // Cargar textura de la Tierra
+  QString texturePath = QCoreApplication::applicationDirPath() +
+                        "/../src/ui/map_resources/earth_texture.png";
+  m_earthTexture = QPixmap(texturePath);
 
-  QNetworkRequest req(url);
-  QNetworkReply *reply = nam->get(req);
-  connect(reply, &QNetworkReply::finished, this, [this, reply]() {
-    if (reply->error() == QNetworkReply::NoError) {
-      m_textureImage.loadFromData(reply->readAll());
-      m_textureImage = m_textureImage.scaled(1000, 500); // Fit
-    }
-    reply->deleteLater();
-  });
+  QString textureMinPath = QCoreApplication::applicationDirPath() +
+                           "/../src/ui/map_resources/earth_texture_minimal.png";
+  m_earthTextureMinimal = QPixmap(textureMinPath);
+
+  if (m_earthTexture.isNull()) {
+    qWarning() << "No se pudo cargar textura de la Tierra desde:"
+               << texturePath;
+  } else {
+    qDebug() << "Textura de la Tierra cargada exitosamente";
+  }
+
+  if (m_earthTextureMinimal.isNull()) {
+    qWarning() << "No se pudo cargar textura minimalista desde:"
+               << textureMinPath;
+  } else {
+    qDebug() << "Textura minimalista cargada exitosamente";
+  }
+
+  // Cargar preferencia de estilo
+  QSettings settings("OLAP2025", "Sistema");
+  m_estiloMinimalista = settings.value("mapa/minimalista", false).toBool();
 
   // 2. Pre-calcular puntos de la esfera
   int samples = 3500;
@@ -146,8 +158,27 @@ void WidgetMapa::setupUI() {
 }
 
 void WidgetMapa::logTransaction(const QString &msg, double amount) {
-  m_listTransactions->addItem(msg + " $" + QString::number(amount));
+  m_listTransactions->addItem(
+      QString("[%1] %2: $%3")
+          .arg(QTime::currentTime().toString("hh:mm:ss"))
+          .arg(msg)
+          .arg(amount, 0, 'f', 2));
   m_listTransactions->scrollToBottom();
+}
+
+WidgetMapa::Point3D WidgetMapa::rotateYMAP(const Point3D &p, double angle) {
+  double cosA = std::cos(angle);
+  double sinA = std::sin(angle);
+  return {p.x * cosA - p.z * sinA, p.y, p.x * sinA + p.z * cosA};
+}
+
+void WidgetMapa::toggleEstiloMapa() {
+  m_estiloMinimalista = !m_estiloMinimalista;
+
+  QSettings settings("OLAP2025", "Sistema");
+  settings.setValue("mapa/minimalista", m_estiloMinimalista);
+
+  dibujarMapaBase();
 }
 
 void WidgetMapa::agregarSucursal() {

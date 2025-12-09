@@ -54,6 +54,9 @@ private:
   QList<EffectData> m_colaEfectos;
 
   QImage m_textureImage;
+  QPixmap m_earthTexture;        // Textura realista de la Tierra
+  QPixmap m_earthTextureMinimal; // Textura minimalista B&N
+  bool m_estiloMinimalista = false;
   QVector<Point3D> m_spherePoints;
   QVector<Point3D> m_starPoints;
   double m_totalVentas = 0;
@@ -62,4 +65,6 @@ private:
 
   void setupUI();
   void logTransaction(const QString &msg, double amount);
+  void toggleEstiloMapa();
+  Point3D rotateYMAP(const Point3D &p, double angle);
 };

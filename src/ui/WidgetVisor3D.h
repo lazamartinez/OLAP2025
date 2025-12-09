@@ -10,9 +10,8 @@ class WidgetVisor3D : public QWidget {
 public:
   explicit WidgetVisor3D(QWidget *parent = nullptr);
   void cargarDatos(SistemaOLAP::Nucleo::CuboDatos *cubo);
-
-private slots:
   void onCuboActualizado();
+  void cargarDatosPrueba(); // Datos de prueba para debugging
 
 private:
   QQuickWidget *m_quickWidget;

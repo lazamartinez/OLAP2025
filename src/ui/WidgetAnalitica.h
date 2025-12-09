@@ -4,15 +4,16 @@
 #include <QWidget>
 #include <QtCharts/QChartView>
 
-
 class WidgetAnalitica : public QWidget {
   Q_OBJECT
 
 public:
   explicit WidgetAnalitica(QWidget *parent = nullptr);
 
-public slots:
-  void ejecutarKMeans();
+private slots:
+  void ejecutarClustering();
+  void ejecutarPrediccion();
+  void detectarAnomalias();
 
 private:
   void configurarUi();

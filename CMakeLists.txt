@@ -10,7 +10,19 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 # Configurar Qt6 con módulos necesarios
-find_package(Qt6 REQUIRED COMPONENTS Widgets Charts Core Gui Sql Network Qml Quick Quick3D QuickWidgets)
+find_package(Qt6 REQUIRED COMPONENTS 
+    Widgets 
+    Charts 
+    Core 
+    Gui 
+    Sql 
+    Network 
+    Qml 
+    Quick 
+    Quick3D 
+    QuickWidgets
+    # WebEngineWidgets  # Comentado - no instalado
+)
 
 # Includes
 include_directories(src)
@@ -43,6 +55,8 @@ set(SOURCES
     src/ui/ExportadorCSV.cpp
     src/ui/WidgetHistorial.cpp
     src/ui/GestorFavoritos.cpp
+    src/ui/WidgetHeatmap.cpp
+    # src/ui/WidgetMapbox.cpp  # Requiere WebEngine
 )
 
 # Ejecutable
@@ -60,6 +74,7 @@ target_link_libraries(SistemaOlap PRIVATE
     Qt6::Quick
     Qt6::Quick3D
     Qt6::QuickWidgets
+    # Qt6::WebEngineWidgets  # No instalado
 )
 
 # Copiar carpeta de datos
