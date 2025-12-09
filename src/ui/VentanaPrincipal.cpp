@@ -4,6 +4,8 @@
 #include "WidgetAnalitica.h"
 #include "WidgetEtl.h"
 #include "WidgetFiltrosGlobales.h"
+#include "WidgetHeatmap.h"
+#include "WidgetHistorial.h"
 #include "WidgetMapa.h"
 #include "WidgetTablero.h"
 #include "WidgetVisor3D.h"
@@ -130,6 +132,8 @@ void VentanaPrincipal::configurarUi() {
   sidebar->addItem("  🌍  Mapa Geo-Espacial");
   sidebar->addItem("  🧊  Exploración Voxel 3D");
   sidebar->addItem("  📈  Analitica & Mining");
+  sidebar->addItem("  📅  Heatmap Temporal");
+  sidebar->addItem("  📜  Historial Queries");
 
   mainLayout->addWidget(sidebar);
 
@@ -165,6 +169,14 @@ void VentanaPrincipal::configurarUi() {
   // Page 4: Analitica
   WidgetAnalitica *analitica = new WidgetAnalitica(this);
   stackedWidget->addWidget(analitica);
+
+  // Page 5: Heatmap
+  WidgetHeatmap *heatmap = new WidgetHeatmap(this);
+  stackedWidget->addWidget(heatmap);
+
+  // Page 6: Historial
+  WidgetHistorial *historial = new WidgetHistorial(this);
+  stackedWidget->addWidget(historial);
 
   // Conectar Navegacion
   connect(sidebar, &QListWidget::currentRowChanged, stackedWidget,

@@ -45,7 +45,7 @@ private:
   QMap<QString, Coordenada> m_ubicaciones;
 
   double m_rotationAngle;
-  double m_rotationSpeed = 0.4;
+  double m_rotationSpeed = 0.05; // Reducido para rotación más lenta
 
   struct EffectData {
     QString locationName;

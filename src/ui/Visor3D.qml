@@ -1,122 +1,105 @@
 import QtQuick
 import QtQuick3D
-import QtQuick3D.Helpers
 
-Item {
+Rectangle {
     id: root
     width: 800
     height: 600
+    color: "#F4F6F9"
 
-    property var voxelData: [] 
-
-    // Background Professional Style (Clean White)
-    Rectangle {
-        anchors.fill: parent
-        color: "#F4F6F9"
-        
-        Text {
-            anchors.centerIn: parent
-            text: "Inicializando Motor de Visualización 3D..."
-            color: "#7F8C8D"
-            font.family: "Segoe UI"
-            font.pixelSize: 18
-            visible: voxelsNode.children.length === 0
-        }
+    Text {
+        anchors.centerIn: parent
+        text: "Visor 3D OLAP - Cargando..."
+        color: "#2C3E50"
+        font.pixelSize: 18
+        font.bold: true
+        visible: !view3d.visible
     }
 
     View3D {
         id: view3d
         anchors.fill: parent
-        opacity: 1.0
+        visible: true
 
         environment: SceneEnvironment {
             clearColor: "#F4F6F9"
             backgroundMode: SceneEnvironment.Color
-            antialiasingMode: SceneEnvironment.MSAA
-            antialiasingQuality: SceneEnvironment.High
-            enableVerticalSync: true
+        }
+
+        PerspectiveCamera {
+            id: camera
+            position: Qt.vector3d(0, 80, 250)
+            eulerRotation.x: -15
+        }
+
+        DirectionalLight {
+            eulerRotation.x: -30
+            eulerRotation.y: 30
+            brightness: 1.2
         }
 
         Node {
-            id: sceneRoot
-
-            DirectionalLight {
-                eulerRotation.x: -45
-                eulerRotation.y: -45
-                color: "#FFFFFF"
-                ambientColor: "#B0B0B0" 
-                brightness: 1.2
-            }
-            
-            // Standard Grid for context
-            Model {
-                source: "#Rectangle"
-                scale: Qt.vector3d(100, 100, 1)
-                eulerRotation.x: -90
-                y: -10
-                materials: DefaultMaterial {
-                    diffuseColor: "#E0E0E0"
-                }
-                opacity: 0.5
-            }
-
-            // Camera
-            PerspectiveCamera {
-                id: camera
-                position: Qt.vector3d(0, 150, 400)
-                eulerRotation.x: -25
-            }
-        }
-        
-        // Orbit Controls
-        OrbitCameraController {
-            origin: sceneRoot
-            camera: camera
-            xSpeed: 0.5
-            ySpeed: 0.5
+            id: voxelsNode
         }
 
-        // Voxel Node
-        Node {
-             id: voxelsNode
-        }
-        
         Component {
-            id: voxelComponent
+            id: voxelComp
             Model {
                 source: "#Cube"
-                scale: Qt.vector3d(0.08, 0.08, 0.08)
+                scale: Qt.vector3d(0.7, 0.7, 0.7)
                 materials: DefaultMaterial {
-                    diffuseColor: "#3498DB" // Corporate Blue
-                    specularAmount: 0.2
-                    roughness: 0.6
+                    diffuseColor: "#3498DB"
                 }
             }
         }
+    }
+
+    function setData(dataList) {
+        console.log("=== QML setData llamado, items:", dataList.length);
         
-        function updateVoxels(dataList) {
-            // Limpiar anteriores
-            for(var i = voxelsNode.children.length; i > 0; i--) {
-                voxelsNode.children[i-1].destroy();
-            }
+        // Limpiar
+        for(var i = voxelsNode.children.length - 1; i >= 0; i--) {
+            voxelsNode.children[i].destroy();
+        }
+        
+        // Crear voxels
+        for(var j = 0; j < dataList.length; j++) {
+            var item = dataList[j];
+            var color = (item.val > 5000) ? "#E67E22" : "#3498DB";
             
-            for (var j = 0; j < dataList.length; j++) {
-                var d = dataList[j];
-                // Color Logic: High Sales = Orange/Red, Normal = Blue
-                var colorHex = (d.val > 5000) ? "#E67E22" : "#3498DB";
-                
-                var obj = voxelComponent.createObject(voxelsNode, {
-                    "position": Qt.vector3d(d.x, d.y, d.z),
-                    "materials": [
-                        Qt.createQmlObject('import QtQuick3D; DefaultMaterial { diffuseColor: "' + colorHex + '"; }', voxelsNode)
-                    ]
-                });
+            voxelComp.createObject(voxelsNode, {
+                "position": Qt.vector3d(item.x, item.y, item.z),
+                "materials": [Qt.createQmlObject(
+                    'import QtQuick3D; DefaultMaterial { diffuseColor: "' + color + '" }',
+                    voxelsNode
+                )]
+            });
+        }
+        
+        console.log("=== Voxels creados:", voxelsNode.children.length);
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        property real prevX: 0
+        property real prevY: 0
+        
+        onPressed: {
+            prevX = mouse.x;
+            prevY = mouse.y;
+        }
+        
+        onPositionChanged: {
+            if (pressed) {
+                camera.eulerRotation.y += (mouse.x - prevX) * 0.3;
+                camera.eulerRotation.x += (mouse.y - prevY) * 0.3;
+                prevX = mouse.x;
+                prevY = mouse.y;
             }
         }
-    }
-    
-    function setData(data) {
-        view3d.updateVoxels(data);
+        
+        onWheel: {
+            camera.position.z += wheel.angleDelta.y * 0.05;
+        }
     }
 }
-
