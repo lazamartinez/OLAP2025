@@ -56,6 +56,9 @@ set(SOURCES
     src/ui/WidgetHistorial.cpp
     src/ui/GestorFavoritos.cpp
     src/ui/WidgetHeatmap.cpp
+    src/ui/WidgetVisor3DSimple.cpp
+    src/ui/WidgetVisor3D.cpp
+    src/ui/WidgetVisor3DDual.cpp
     # src/ui/WidgetMapbox.cpp  # Requiere WebEngine
 )
 

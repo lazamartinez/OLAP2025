@@ -8,7 +8,7 @@
 #include "WidgetHistorial.h"
 #include "WidgetMapa.h"
 #include "WidgetTablero.h"
-#include "WidgetVisor3D.h"
+#include "WidgetVisor3DDual.h" // Dual: QML + Simple con toggle
 #include <QDebug>
 #include <QHBoxLayout>
 #include <QListWidget>
@@ -160,10 +160,8 @@ void VentanaPrincipal::configurarUi() {
   WidgetMapa *mapa = new WidgetMapa(this);
   stackedWidget->addWidget(mapa);
 
-  // Page 3: Visor 3D
-  WidgetVisor3D *visor3d = new WidgetVisor3D(this);
-  if (m_cuboDatos)
-    visor3d->cargarDatos(m_cuboDatos);
+  // Page 3: Visor 3D Dual (QML + Simple con toggle)
+  WidgetVisor3DDual *visor3d = new WidgetVisor3DDual(this);
   stackedWidget->addWidget(visor3d);
 
   // Page 4: Analitica
