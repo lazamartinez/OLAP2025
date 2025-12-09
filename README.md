@@ -9,11 +9,27 @@
 
 ---
 
-## Descripción del Proyecto
+Este proyecto es una implementación educativa de refernecia de un **Data Warehouse y Sistema OLAP con Visualización 3D**, diseñado para la cátedra de Bases de Datos 2025. Implementa una arquitectura modular moderna utilizando C++17 y Qt 6.
 
-Este sistema está diseñado para demostrar potentes capacidades de **Business Intelligence (BI)** integradas en una aplicación nativa de alto rendimiento. Combina la robustez de PostgreSQL para el almacenamiento de Data Warehouse con la velocidad de C++ para el procesamiento y visualización de datos.
+## Características Principales (Propuesta Integral)
 
-El objetivo principal es permitir a las organizaciones visualizar tendencias de ventas, gestionar procesos masivos de datos y realizar proyecciones analíticas avanzadas.
+1.  **Motor ETL de Alto Rendimiento (Simulado)**
+    - Extracción multihilo.
+    - Transformación con pipelines (Normalización, Anonimización).
+    - Carga inteligente a almacenamiento multidimensional.
+
+2.  **Cubo OLAP y Storage MOLAP**
+    - Abstracción de almacenamiento físico (`CuboDatos`).
+    - Motor de consultas MDX (`ProcesadorConsultasOLAP`).
+
+3.  **Visualización 3D Inmersiva**
+    - Renderizado de Vóxeles usando **QtQuick3D**.
+    - Navegación orbital e iluminación dinámica.
+    - Estética "Cyberpunk" para dashboard moderno.
+
+4.  **Arquitectura Extensible**
+    - Namespaces claros: `SistemaOLAP::Nucleo`, `Visualizacion`, `Analitica`.
+    - Preparado para integración con RocksDB, Arrow y Apache Calcite.
 
 ## Características Principales
 

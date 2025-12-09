@@ -5,28 +5,46 @@
 #include <QtCharts/QScatterSeries>
 #include <QtCharts/QValueAxis>
 
-
 WidgetAnalitica::WidgetAnalitica(QWidget *parent) : QWidget(parent) {
   configurarUi();
 }
 
 void WidgetAnalitica::configurarUi() {
-  QVBoxLayout *layout = new QVBoxLayout(this);
+  this->setStyleSheet(""); // Reset to default
 
-  QLabel *lbl = new QLabel("<h3>Segmentación de Clientes (K-Means)</h3>");
-  lbl->setStyleSheet("color: #2a82da;");
+  QVBoxLayout *layout = new QVBoxLayout(this);
+  layout->setSpacing(20);
+  layout->setContentsMargins(40, 40, 40, 40);
+
+  // Title
+  QLabel *lbl = new QLabel("Analítica: Segmentación de Clientes");
+  lbl->setStyleSheet("font-size: 24px; font-weight: bold; color: #333; "
+                     "border-bottom: 2px solid #2a82da; padding-bottom: 10px;");
   layout->addWidget(lbl);
 
-  QPushButton *btn = new QPushButton("Ejecutar Análisis de Muestreo", this);
+  // Button
+  QPushButton *btn = new QPushButton("Ejecutar Análisis K-Means", this);
+  btn->setCursor(Qt::PointingHandCursor);
+  btn->setStyleSheet("QPushButton { background-color: #2a82da; color: white; "
+                     "border: none; padding: 12px; font-size: 14px; "
+                     "border-radius: 6px; font-weight: bold; } "
+                     "QPushButton:hover { background-color: #1c68b3; }");
   connect(btn, &QPushButton::clicked, this, &WidgetAnalitica::ejecutarKMeans);
   layout->addWidget(btn);
 
+  // Chart
   m_chart = new QChart();
   m_chart->setTitle("Clusters de Comportamiento");
-  m_chart->setTheme(QChart::ChartThemeDark);
+  m_chart->setTitleBrush(QBrush(Qt::black));
+  m_chart->setTheme(QChart::ChartThemeBlueCerulean);
+  m_chart->setBackgroundVisible(true);
+  m_chart->setBackgroundBrush(QBrush(Qt::white));
+  m_chart->setPlotAreaBackgroundVisible(false);
 
   m_vistaChart = new QChartView(m_chart);
   m_vistaChart->setRenderHint(QPainter::Antialiasing);
+  // Remove border
+  m_vistaChart->setStyleSheet("border: 1px solid #ddd; border-radius: 5px;");
   layout->addWidget(m_vistaChart);
 }
 

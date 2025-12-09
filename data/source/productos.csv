@@ -1,0 +1,201 @@
+id_producto,nombre,categoria,marca,precio_base
+1,Monitor 4K Ultra 1,Perifericos,CyberSystems,1578.29
+2,Teclado Mecanico RGB 2,Gaming,LogicWare,957.59
+3,Mouse Inalambrico Pro 3,Redes,FutureTech,1500.10
+4,Auriculares Noise Cancelling 4,Oficina,GigaPower,1615.13
+5,Tablet Grafica 10p 5,Computacion,NanoSoft,877.34
+6,Smartphone Flagship Z 6,Perifericos,TechBrand,1639.51
+7,Smartwatch Fitness 7,Gaming,CyberSystems,1708.87
+8,Disco SSD NVMe 1TB 8,Redes,LogicWare,2187.14
+9,Memoria RAM DDR4 16GB 9,Oficina,FutureTech,2157.57
+10,Placa de Video RTX 4090 10,Computacion,GigaPower,1574.87
+11,Procesador Core i9 11,Perifericos,NanoSoft,2822.21
+12,Fuente Modular 850W 12,Gaming,TechBrand,305.58
+13,Gabinete Vidrio Templado 13,Redes,CyberSystems,2247.05
+14,Silla Gamer Ergonomica 14,Oficina,LogicWare,522.73
+15,Webcam 1080p Streaming 15,Computacion,FutureTech,1464.36
+16,Microfono Condensador USB 16,Perifericos,GigaPower,1856.88
+17,Router WiFi 6 Mesh 17,Gaming,NanoSoft,1383.14
+18,Impresora Laser Color 18,Redes,TechBrand,2361.10
+19,Proyector Portatil Mini 19,Oficina,CyberSystems,1200.79
+20,Laptop Gamer Xtreme 20,Computacion,LogicWare,1524.52
+21,Monitor 4K Ultra 21,Perifericos,FutureTech,2625.73
+22,Teclado Mecanico RGB 22,Gaming,GigaPower,1635.90
+23,Mouse Inalambrico Pro 23,Redes,NanoSoft,139.30
+24,Auriculares Noise Cancelling 24,Oficina,TechBrand,2599.79
+25,Tablet Grafica 10p 25,Computacion,CyberSystems,1383.11
+26,Smartphone Flagship Z 26,Perifericos,LogicWare,1115.34
+27,Smartwatch Fitness 27,Gaming,FutureTech,601.78
+28,Disco SSD NVMe 1TB 28,Redes,GigaPower,55.11
+29,Memoria RAM DDR4 16GB 29,Oficina,NanoSoft,1672.26
+30,Placa de Video RTX 4090 30,Computacion,TechBrand,813.91
+31,Procesador Core i9 31,Perifericos,CyberSystems,955.64
+32,Fuente Modular 850W 32,Gaming,LogicWare,2522.05
+33,Gabinete Vidrio Templado 33,Redes,FutureTech,95.20
+34,Silla Gamer Ergonomica 34,Oficina,GigaPower,2255.76
+35,Webcam 1080p Streaming 35,Computacion,NanoSoft,267.53
+36,Microfono Condensador USB 36,Perifericos,TechBrand,790.79
+37,Router WiFi 6 Mesh 37,Gaming,CyberSystems,683.50
+38,Impresora Laser Color 38,Redes,LogicWare,920.81
+39,Proyector Portatil Mini 39,Oficina,FutureTech,268.28
+40,Laptop Gamer Xtreme 40,Computacion,GigaPower,566.71
+41,Monitor 4K Ultra 41,Perifericos,NanoSoft,2767.18
+42,Teclado Mecanico RGB 42,Gaming,TechBrand,1089.35
+43,Mouse Inalambrico Pro 43,Redes,CyberSystems,670.16
+44,Auriculares Noise Cancelling 44,Oficina,LogicWare,1488.03
+45,Tablet Grafica 10p 45,Computacion,FutureTech,2530.87
+46,Smartphone Flagship Z 46,Perifericos,GigaPower,703.73
+47,Smartwatch Fitness 47,Gaming,NanoSoft,1397.91
+48,Disco SSD NVMe 1TB 48,Redes,TechBrand,813.58
+49,Memoria RAM DDR4 16GB 49,Oficina,CyberSystems,1312.41
+50,Placa de Video RTX 4090 50,Computacion,LogicWare,680.62
+51,Procesador Core i9 51,Perifericos,FutureTech,539.26
+52,Fuente Modular 850W 52,Gaming,GigaPower,923.12
+53,Gabinete Vidrio Templado 53,Redes,NanoSoft,2935.93
+54,Silla Gamer Ergonomica 54,Oficina,TechBrand,113.24
+55,Webcam 1080p Streaming 55,Computacion,CyberSystems,303.16
+56,Microfono Condensador USB 56,Perifericos,LogicWare,95.58
+57,Router WiFi 6 Mesh 57,Gaming,FutureTech,1830.57
+58,Impresora Laser Color 58,Redes,GigaPower,2771.10
+59,Proyector Portatil Mini 59,Oficina,NanoSoft,2802.57
+60,Laptop Gamer Xtreme 60,Computacion,TechBrand,255.14
+61,Monitor 4K Ultra 61,Perifericos,CyberSystems,647.54
+62,Teclado Mecanico RGB 62,Gaming,LogicWare,242.19
+63,Mouse Inalambrico Pro 63,Redes,FutureTech,823.36
+64,Auriculares Noise Cancelling 64,Oficina,GigaPower,2524.48
+65,Tablet Grafica 10p 65,Computacion,NanoSoft,2557.66
+66,Smartphone Flagship Z 66,Perifericos,TechBrand,751.13
+67,Smartwatch Fitness 67,Gaming,CyberSystems,2189.85
+68,Disco SSD NVMe 1TB 68,Redes,LogicWare,1613.73
+69,Memoria RAM DDR4 16GB 69,Oficina,FutureTech,2352.97
+70,Placa de Video RTX 4090 70,Computacion,GigaPower,2894.08
+71,Procesador Core i9 71,Perifericos,NanoSoft,2469.20
+72,Fuente Modular 850W 72,Gaming,TechBrand,1292.66
+73,Gabinete Vidrio Templado 73,Redes,CyberSystems,1129.12
+74,Silla Gamer Ergonomica 74,Oficina,LogicWare,1787.02
+75,Webcam 1080p Streaming 75,Computacion,FutureTech,2072.56
+76,Microfono Condensador USB 76,Perifericos,GigaPower,531.19
+77,Router WiFi 6 Mesh 77,Gaming,NanoSoft,2231.62
+78,Impresora Laser Color 78,Redes,TechBrand,948.12
+79,Proyector Portatil Mini 79,Oficina,CyberSystems,1200.95
+80,Laptop Gamer Xtreme 80,Computacion,LogicWare,1647.08
+81,Monitor 4K Ultra 81,Perifericos,FutureTech,2036.89
+82,Teclado Mecanico RGB 82,Gaming,GigaPower,1438.86
+83,Mouse Inalambrico Pro 83,Redes,NanoSoft,2177.11
+84,Auriculares Noise Cancelling 84,Oficina,TechBrand,2445.99
+85,Tablet Grafica 10p 85,Computacion,CyberSystems,2579.29
+86,Smartphone Flagship Z 86,Perifericos,LogicWare,1910.12
+87,Smartwatch Fitness 87,Gaming,FutureTech,2381.10
+88,Disco SSD NVMe 1TB 88,Redes,GigaPower,573.20
+89,Memoria RAM DDR4 16GB 89,Oficina,NanoSoft,1423.73
+90,Placa de Video RTX 4090 90,Computacion,TechBrand,2903.42
+91,Procesador Core i9 91,Perifericos,CyberSystems,2840.40
+92,Fuente Modular 850W 92,Gaming,LogicWare,886.39
+93,Gabinete Vidrio Templado 93,Redes,FutureTech,2280.16
+94,Silla Gamer Ergonomica 94,Oficina,GigaPower,960.75
+95,Webcam 1080p Streaming 95,Computacion,NanoSoft,1953.07
+96,Microfono Condensador USB 96,Perifericos,TechBrand,620.93
+97,Router WiFi 6 Mesh 97,Gaming,CyberSystems,1947.96
+98,Impresora Laser Color 98,Redes,LogicWare,1439.60
+99,Proyector Portatil Mini 99,Oficina,FutureTech,371.49
+100,Laptop Gamer Xtreme 100,Computacion,GigaPower,2099.58
+101,Monitor 4K Ultra 101,Perifericos,NanoSoft,1945.40
+102,Teclado Mecanico RGB 102,Gaming,TechBrand,2687.06
+103,Mouse Inalambrico Pro 103,Redes,CyberSystems,2921.25
+104,Auriculares Noise Cancelling 104,Oficina,LogicWare,2211.32
+105,Tablet Grafica 10p 105,Computacion,FutureTech,2057.08
+106,Smartphone Flagship Z 106,Perifericos,GigaPower,2761.04
+107,Smartwatch Fitness 107,Gaming,NanoSoft,2427.08
+108,Disco SSD NVMe 1TB 108,Redes,TechBrand,1116.25
+109,Memoria RAM DDR4 16GB 109,Oficina,CyberSystems,264.55
+110,Placa de Video RTX 4090 110,Computacion,LogicWare,1585.04
+111,Procesador Core i9 111,Perifericos,FutureTech,258.34
+112,Fuente Modular 850W 112,Gaming,GigaPower,494.12
+113,Gabinete Vidrio Templado 113,Redes,NanoSoft,1962.17
+114,Silla Gamer Ergonomica 114,Oficina,TechBrand,2425.58
+115,Webcam 1080p Streaming 115,Computacion,CyberSystems,322.42
+116,Microfono Condensador USB 116,Perifericos,LogicWare,1977.99
+117,Router WiFi 6 Mesh 117,Gaming,FutureTech,919.70
+118,Impresora Laser Color 118,Redes,GigaPower,548.34
+119,Proyector Portatil Mini 119,Oficina,NanoSoft,891.75
+120,Laptop Gamer Xtreme 120,Computacion,TechBrand,1989.52
+121,Monitor 4K Ultra 121,Perifericos,CyberSystems,1795.28
+122,Teclado Mecanico RGB 122,Gaming,LogicWare,2650.42
+123,Mouse Inalambrico Pro 123,Redes,FutureTech,250.45
+124,Auriculares Noise Cancelling 124,Oficina,GigaPower,2754.57
+125,Tablet Grafica 10p 125,Computacion,NanoSoft,2738.22
+126,Smartphone Flagship Z 126,Perifericos,TechBrand,1872.82
+127,Smartwatch Fitness 127,Gaming,CyberSystems,349.67
+128,Disco SSD NVMe 1TB 128,Redes,LogicWare,889.85
+129,Memoria RAM DDR4 16GB 129,Oficina,FutureTech,2124.22
+130,Placa de Video RTX 4090 130,Computacion,GigaPower,990.08
+131,Procesador Core i9 131,Perifericos,NanoSoft,168.42
+132,Fuente Modular 850W 132,Gaming,TechBrand,2840.65
+133,Gabinete Vidrio Templado 133,Redes,CyberSystems,424.14
+134,Silla Gamer Ergonomica 134,Oficina,LogicWare,2665.26
+135,Webcam 1080p Streaming 135,Computacion,FutureTech,239.22
+136,Microfono Condensador USB 136,Perifericos,GigaPower,1098.82
+137,Router WiFi 6 Mesh 137,Gaming,NanoSoft,2270.06
+138,Impresora Laser Color 138,Redes,TechBrand,1275.79
+139,Proyector Portatil Mini 139,Oficina,CyberSystems,2943.66
+140,Laptop Gamer Xtreme 140,Computacion,LogicWare,1870.47
+141,Monitor 4K Ultra 141,Perifericos,FutureTech,2474.15
+142,Teclado Mecanico RGB 142,Gaming,GigaPower,653.65
+143,Mouse Inalambrico Pro 143,Redes,NanoSoft,1896.62
+144,Auriculares Noise Cancelling 144,Oficina,TechBrand,1322.06
+145,Tablet Grafica 10p 145,Computacion,CyberSystems,2977.05
+146,Smartphone Flagship Z 146,Perifericos,LogicWare,218.38
+147,Smartwatch Fitness 147,Gaming,FutureTech,1929.02
+148,Disco SSD NVMe 1TB 148,Redes,GigaPower,2938.46
+149,Memoria RAM DDR4 16GB 149,Oficina,NanoSoft,2578.79
+150,Placa de Video RTX 4090 150,Computacion,TechBrand,265.19
+151,Procesador Core i9 151,Perifericos,CyberSystems,1850.68
+152,Fuente Modular 850W 152,Gaming,LogicWare,1921.64
+153,Gabinete Vidrio Templado 153,Redes,FutureTech,428.30
+154,Silla Gamer Ergonomica 154,Oficina,GigaPower,59.08
+155,Webcam 1080p Streaming 155,Computacion,NanoSoft,363.07
+156,Microfono Condensador USB 156,Perifericos,TechBrand,2135.29
+157,Router WiFi 6 Mesh 157,Gaming,CyberSystems,2844.81
+158,Impresora Laser Color 158,Redes,LogicWare,1323.20
+159,Proyector Portatil Mini 159,Oficina,FutureTech,2073.91
+160,Laptop Gamer Xtreme 160,Computacion,GigaPower,1985.93
+161,Monitor 4K Ultra 161,Perifericos,NanoSoft,2978.10
+162,Teclado Mecanico RGB 162,Gaming,TechBrand,1731.42
+163,Mouse Inalambrico Pro 163,Redes,CyberSystems,418.77
+164,Auriculares Noise Cancelling 164,Oficina,LogicWare,2999.96
+165,Tablet Grafica 10p 165,Computacion,FutureTech,815.60
+166,Smartphone Flagship Z 166,Perifericos,GigaPower,2713.22
+167,Smartwatch Fitness 167,Gaming,NanoSoft,2369.58
+168,Disco SSD NVMe 1TB 168,Redes,TechBrand,421.47
+169,Memoria RAM DDR4 16GB 169,Oficina,CyberSystems,1365.88
+170,Placa de Video RTX 4090 170,Computacion,LogicWare,1437.76
+171,Procesador Core i9 171,Perifericos,FutureTech,1187.79
+172,Fuente Modular 850W 172,Gaming,GigaPower,2246.40
+173,Gabinete Vidrio Templado 173,Redes,NanoSoft,930.97
+174,Silla Gamer Ergonomica 174,Oficina,TechBrand,403.36
+175,Webcam 1080p Streaming 175,Computacion,CyberSystems,2804.12
+176,Microfono Condensador USB 176,Perifericos,LogicWare,452.37
+177,Router WiFi 6 Mesh 177,Gaming,FutureTech,404.40
+178,Impresora Laser Color 178,Redes,GigaPower,2870.98
+179,Proyector Portatil Mini 179,Oficina,NanoSoft,1045.41
+180,Laptop Gamer Xtreme 180,Computacion,TechBrand,726.81
+181,Monitor 4K Ultra 181,Perifericos,CyberSystems,540.42
+182,Teclado Mecanico RGB 182,Gaming,LogicWare,2077.34
+183,Mouse Inalambrico Pro 183,Redes,FutureTech,2743.00
+184,Auriculares Noise Cancelling 184,Oficina,GigaPower,1824.17
+185,Tablet Grafica 10p 185,Computacion,NanoSoft,2312.70
+186,Smartphone Flagship Z 186,Perifericos,TechBrand,1154.63
+187,Smartwatch Fitness 187,Gaming,CyberSystems,2246.42
+188,Disco SSD NVMe 1TB 188,Redes,LogicWare,2303.24
+189,Memoria RAM DDR4 16GB 189,Oficina,FutureTech,2654.03
+190,Placa de Video RTX 4090 190,Computacion,GigaPower,780.78
+191,Procesador Core i9 191,Perifericos,NanoSoft,1463.96
+192,Fuente Modular 850W 192,Gaming,TechBrand,2039.75
+193,Gabinete Vidrio Templado 193,Redes,CyberSystems,487.32
+194,Silla Gamer Ergonomica 194,Oficina,LogicWare,294.92
+195,Webcam 1080p Streaming 195,Computacion,FutureTech,2895.61
+196,Microfono Condensador USB 196,Perifericos,GigaPower,1174.22
+197,Router WiFi 6 Mesh 197,Gaming,NanoSoft,370.56
+198,Impresora Laser Color 198,Redes,TechBrand,2643.14
+199,Proyector Portatil Mini 199,Oficina,CyberSystems,939.16
+200,Laptop Gamer Xtreme 200,Computacion,LogicWare,2240.38

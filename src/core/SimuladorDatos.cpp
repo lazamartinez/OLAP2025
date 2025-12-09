@@ -5,7 +5,6 @@
 #include <iomanip>
 #include <iostream>
 
-
 namespace fs = std::filesystem;
 
 SimuladorDatos::SimuladorDatos() {
@@ -18,63 +17,114 @@ bool SimuladorDatos::generarDatos(const ConfiguracionSimulacion &config) {
     fs::create_directories(config.directorioSalida);
   }
 
-  // 1. Generar Productos
+  // Listas de datos realistas para la "Semilla"
+  const std::vector<std::string> nombresProductos = {
+      "Laptop Gamer Xtreme",          "Monitor 4K Ultra",
+      "Teclado Mecanico RGB",         "Mouse Inalambrico Pro",
+      "Auriculares Noise Cancelling", "Tablet Grafica 10p",
+      "Smartphone Flagship Z",        "Smartwatch Fitness",
+      "Disco SSD NVMe 1TB",           "Memoria RAM DDR4 16GB",
+      "Placa de Video RTX 4090",      "Procesador Core i9",
+      "Fuente Modular 850W",          "Gabinete Vidrio Templado",
+      "Silla Gamer Ergonomica",       "Webcam 1080p Streaming",
+      "Microfono Condensador USB",    "Router WiFi 6 Mesh",
+      "Impresora Laser Color",        "Proyector Portatil Mini"};
+
+  const std::vector<std::string> marcas = {"TechBrand", "CyberSystems",
+                                           "LogicWare", "FutureTech",
+                                           "GigaPower", "NanoSoft"};
+
+  const std::vector<std::string> categorias = {"Computacion", "Perifericos",
+                                               "Gaming", "Redes", "Oficina"};
+
+  // 1. Generar Productos (Catalogo mas amplio de ejemplo, 200 items)
   std::ofstream archivoProd(config.directorioSalida + "/productos.csv");
   archivoProd << "id_producto,nombre,categoria,marca,precio_base\n";
 
   std::vector<double> preciosBase;
-  for (int i = 1; i <= 100; ++i) {
-    double precio = std::uniform_real_distribution<>(10.0, 1000.0)(m_rng);
+  for (int i = 1; i <= 200; ++i) {
+    // Seleccion aleatoria de propiedades
+    std::string nombre =
+        nombresProductos[i % nombresProductos.size()] + " " + std::to_string(i);
+    std::string marca = marcas[i % marcas.size()];
+    std::string cat = categorias[i % categorias.size()];
+
+    double precio = std::uniform_real_distribution<>(50.0, 3000.0)(m_rng);
     preciosBase.push_back(precio);
-    archivoProd << i << ",Producto_" << i << ",Categoria_" << (i % 10)
-                << ",Marca_" << (i % 5) << "," << std::fixed
-                << std::setprecision(2) << precio << "\n";
+
+    archivoProd << i << "," << nombre << "," << cat << "," << marca << ","
+                << std::fixed << std::setprecision(2) << precio << "\n";
   }
   archivoProd.close();
 
-  // 2. Generar Sucursales
+  // 2. Generar Sucursales (Mas regiones)
   std::ofstream archivoSuc(config.directorioSalida + "/sucursales.csv");
   archivoSuc << "id_sucursal,ciudad,region,pais\n";
-  archivoSuc << "1,Buenos Aires,CABA,Argentina\n";
+  archivoSuc << "1,Buenos Aires,AMBA,Argentina\n";
   archivoSuc << "2,Cordoba,Centro,Argentina\n";
-  archivoSuc << "3,Posadas,NEA,Argentina\n"; // Ejemplo local
+  archivoSuc << "3,Rosario,Litoral,Argentina\n";
   archivoSuc << "4,Mendoza,Cuyo,Argentina\n";
-  archivoSuc << "5,Rosario,Centro,Argentina\n";
+  archivoSuc << "5,Tucuman,NOA,Argentina\n";
+  archivoSuc << "6,Neuquen,Patagonia,Argentina\n";
+  archivoSuc << "7,Mar del Plata,Costa,Argentina\n";
   archivoSuc.close();
 
-  // 3. Generar Ventas (Fact)
+  // 3. Generar Ventas (Fact) - VOLUMEN MASIVO
   std::ofstream archivoVentas(config.directorioSalida + "/ventas.csv");
   archivoVentas << "id_venta,timestamp,id_producto,id_cliente,id_sucursal,"
                    "cantidad,precio_unitario,total\n";
 
-  std::cout << "Generando " << config.numRegistros
-            << " transacciones simuladas..." << std::endl;
+  // Usamos 1 Millon de registros si no se especifica otro
+  int maxRegistros =
+      (config.numRegistros < 100000) ? 1000000 : config.numRegistros;
 
-  std::uniform_int_distribution<> distProd(1, 100);
-  std::uniform_int_distribution<> distSuc(1, 5);
-  std::uniform_int_distribution<> distCliente(1, 5000);
-  std::uniform_int_distribution<> distCant(1, 10);
-  std::uniform_int_distribution<> distTiempo(0, 31536000); // Segundos en un año
+  std::cout << "Generando SEMILLA MASIVA de " << maxRegistros
+            << " transacciones... (Esto puede tardar unos segundos)"
+            << std::endl;
 
-  for (int i = 1; i <= config.numRegistros; ++i) {
+  std::uniform_int_distribution<> distProd(1, 200);
+  std::uniform_int_distribution<> distSuc(1, 7);
+  std::uniform_int_distribution<> distCliente(1, 50000); // 50k clientes unicos
+  std::uniform_int_distribution<> distCant(1,
+                                           20); // Compras mayoristas posibles
+  std::uniform_int_distribution<> distTiempo(0, 31536000 *
+                                                    2); // 2 años de historia
+
+  // Buffer para optimizar escritura
+  char bufferLine[256];
+
+  for (int i = 1; i <= maxRegistros; ++i) {
     int idProd = distProd(m_rng);
     int idSuc = distSuc(m_rng);
     int idCli = distCliente(m_rng);
     int cantidad = distCant(m_rng);
+
+    // Variacion de precio por oferta/inflacion
     double precio = preciosBase[idProd - 1] *
-                    std::uniform_real_distribution<>(0.9, 1.1)(m_rng);
+                    std::uniform_real_distribution<>(0.85, 1.15)(m_rng);
     double total = cantidad * precio;
 
-    // Fecha aleatoria en 2023
+    // Fecha aleatoria desde 2023
     time_t rawTime = 1672531200 + distTiempo(m_rng);
     std::tm *tm = std::localtime(&rawTime);
-    char bufferFecha[30];
+
+    // Formateo rapido manual o snprintf es mas rapido que strftime para loop
+    // masivo? strftime es seguro.
+    char bufferFecha[20];
     std::strftime(bufferFecha, sizeof(bufferFecha), "%Y-%m-%d %H:%M:%S", tm);
 
+    // Escribir linea
+    // id_venta, timestamp, id_prod, id_cli, id_suc, cant, precio, total
     archivoVentas << i << "," << bufferFecha << "," << idProd << "," << idCli
                   << "," << idSuc << "," << cantidad << "," << std::fixed
                   << std::setprecision(2) << precio << "," << total << "\n";
+
+    if (i % 10000 == 0) {
+      std::cout << "\rProgreso: " << (i * 100 / maxRegistros) << "%"
+                << std::flush;
+    }
   }
+  std::cout << "\nGeneracion completada." << std::endl;
   archivoVentas.close();
 
   return true;

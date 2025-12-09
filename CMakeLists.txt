@@ -9,23 +9,35 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-# Configurar Qt6 con módulo SQL
-find_package(Qt6 REQUIRED COMPONENTS Widgets Charts Core Gui Sql)
+# Configurar Qt6 con módulos necesarios
+find_package(Qt6 REQUIRED COMPONENTS Widgets Charts Core Gui Sql Network Qml Quick Quick3D QuickWidgets)
 
 # Includes
 include_directories(src)
+include_directories(src/core) # Legacy support
+include_directories(src/SistemaOLAP/Nucleo)
+include_directories(src/SistemaOLAP/Visualizacion)
+include_directories(src/SistemaOLAP/Analitica)
 
-# Archivos fuente (Nuevos nombres en Español)
+# Archivos fuente
 set(SOURCES
     src/main.cpp
-    src/core/GestorBaseDatos.cpp
-    src/core/SimuladorDatos.cpp
-    src/core/ServicioEtl.cpp
     src/ui/VentanaPrincipal.cpp
     src/ui/WidgetTablero.cpp
     src/ui/WidgetEtl.cpp
     src/ui/WidgetAnalitica.cpp
+    src/ui/WidgetMapa.cpp
+    src/core/GestorBaseDatos.cpp
+    src/core/SimuladorDatos.cpp
+    src/core/ServicioEtl.cpp
     src/analytics/KMeans.cpp
+    # Nuevos Modulos de la Arquitectura Integral
+    src/SistemaOLAP/Nucleo/MotorETL.cpp
+    src/SistemaOLAP/Nucleo/CuboDatos.cpp
+    src/SistemaOLAP/Nucleo/PipelineTransformacion.cpp
+    src/SistemaOLAP/Nucleo/ProcesadorConsultas.cpp
+    src/SistemaOLAP/Analitica/GestorAnalitica.cpp
+    src/ui/WidgetVisor3D.cpp
 )
 
 # Ejecutable
@@ -38,6 +50,11 @@ target_link_libraries(SistemaOlap PRIVATE
     Qt6::Core
     Qt6::Gui
     Qt6::Sql
+    Qt6::Network
+    Qt6::Qml
+    Qt6::Quick
+    Qt6::Quick3D
+    Qt6::QuickWidgets
 )
 
 # Copiar carpeta de datos

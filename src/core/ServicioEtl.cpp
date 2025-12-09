@@ -2,6 +2,7 @@
 #include "GestorBaseDatos.h"
 #include <QDebug>
 #include <QDir>
+#include <QProcess>
 
 ServicioEtl::ServicioEtl() {}
 
@@ -59,50 +60,67 @@ bool ServicioEtl::inicializarEsquema() {
 bool ServicioEtl::cargarDesdeCSV(const std::string &directorioDatos) {
   auto &db = GestorBaseDatos::instancia();
 
-  // En PostgreSQL, COPY requiere superusuario o ser dueño, y archivo en
-  // SERVIDOR. Para carga cliente, usamos \copy (solo psql) o COPY ... FROM
-  // STDIN. Como esto es C++ cliente, la forma mas robusta sin depender de la
-  // ubicacion del server es leer el archivo y hacer batch inserts, o usar 'COPY
-  // table FROM STDIN' con libpq. QSqlDriver no soporta COPY directamente de
-  // forma facil. TRUCO: Si es local, podemos usar COPY ... FROM 'absolute/path'
-  // si el usuario de postgres tiene permisos. Intentaremos COPY con path
-  // absoluto. Si falla, fallback a nada (por simplicidad del demo).
-
   QDir dir(QString::fromStdString(directorioDatos));
   QString absPath = dir.absolutePath();
 
-  qDebug() << "Intentando carga masiva (COPY) desde:" << absPath;
+  qDebug() << "Intentando carga masiva (Cliente-Side \\copy) desde:" << absPath;
 
-  // Limpieza previa
-  db.ejecutarConsulta(
-      "TRUNCATE TABLE fact_ventas, dim_producto, dim_sucursal CASCADE;");
+  // Limpieza previa (Truncate)
+  if (!db.ejecutarConsulta(
+          "TRUNCATE TABLE fact_ventas, dim_producto, dim_sucursal CASCADE;")) {
+    qWarning() << "No se pudo truncar tablas. Tal vez no existen aun.";
+  }
 
-  // NOTA: Postgres requiere path con forward slashes o escapeados.
+  // Definir paths de archivos (usar forward slashes para evitar problemas)
   QString pathProd = absPath + "/productos.csv";
   QString pathSuc = absPath + "/sucursales.csv";
   QString pathVentas = absPath + "/ventas.csv";
 
-  // COPY table FROM 'path' DELIMITER ',' CSV HEADER;
-  auto copyCmd = [](QString table, QString path) {
-    return QString("COPY %1 FROM '%2' DELIMITER ',' CSV HEADER;")
-        .arg(table, path);
+  // Función helper para ejecutar psql \copy
+  auto ejecutarCopy = [](QString tabla, QString archivo) {
+    QProcess process;
+    // Configurar entorno para contraseña (evita prompt)
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("PGPASSWORD", "laza"); // Contraseña hardcodeada para el demo
+    process.setProcessEnvironment(env);
+
+    QString cmd = "psql";
+    QStringList args;
+    args << "-h" << "localhost"
+         << "-p" << "5432"
+         << "-U" << "postgres"
+         << "-d" << "bd2025"
+         << "-c"
+         << QString("\\copy %1 FROM '%2' DELIMITER ',' CSV HEADER")
+                .arg(tabla, archivo);
+
+    qDebug() << "Ejecutando:" << cmd << args.join(" "); // Debug info
+
+    process.start(cmd, args);
+    // Timeout aumentado a 5 minutos (300000 ms) para carga masiva
+    if (!process.waitForFinished(300000)) {
+      qCritical() << "Timeout o error ejecutando psql para" << tabla;
+      return false;
+    }
+
+    if (process.exitCode() != 0) {
+      qCritical() << "Error psql:" << process.readAllStandardError();
+      return false;
+    }
+
+    qDebug() << "Carga OK:" << tabla;
+    return true;
   };
 
-  if (!db.ejecutarConsulta(copyCmd("dim_producto", pathProd))) {
-    qWarning() << "Fallo COPY dim_producto. Asegúrate que el usuario postgres "
-                  "tenga permisos de lectura en:"
-               << pathProd;
-    // Fallback? Seria complejo implementar batch insert aqui mismo sin bloat.
-    // Asumimos exito o error de permisos visible.
-    return false;
-  }
+  bool ok = true;
+  if (!ejecutarCopy("dim_producto", pathProd))
+    ok = false;
+  if (!ejecutarCopy("dim_sucursal", pathSuc))
+    ok = false;
+  if (!ejecutarCopy("fact_ventas", pathVentas))
+    ok = false; // Este es el mas pesado
 
-  if (!db.ejecutarConsulta(copyCmd("dim_sucursal", pathSuc)))
-    return false;
-  if (!db.ejecutarConsulta(copyCmd("fact_ventas", pathVentas)))
-    return false;
-
-  return true;
+  return ok;
 }
 
 bool ServicioEtl::transformarDatos() {
@@ -123,8 +141,10 @@ bool ServicioEtl::transformarDatos() {
         WITH DATA;
     )";
 
-  // Refresh si ya existe
-  db.ejecutarConsulta("REFRESH MATERIALIZED VIEW ventas_por_categoria;");
+  // 1. Asegurar que exista
+  if (!db.ejecutarConsulta(sqlVista))
+    return false;
 
-  return db.ejecutarConsulta(sqlVista);
+  // 2. Refrescar datos (si ya existia o para actualizar datos nuevos)
+  return db.ejecutarConsulta("REFRESH MATERIALIZED VIEW ventas_por_categoria;");
 }
