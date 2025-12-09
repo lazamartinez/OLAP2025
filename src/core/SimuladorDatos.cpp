@@ -1,4 +1,6 @@
 #include "SimuladorDatos.h"
+#include "../core/GestorBaseDatos.h"
+#include <QSqlQuery>
 #include <ctime>
 #include <filesystem>
 #include <fstream>
@@ -127,5 +129,15 @@ bool SimuladorDatos::generarDatos(const ConfiguracionSimulacion &config) {
   std::cout << "\nGeneracion completada." << std::endl;
   archivoVentas.close();
 
+  return true;
+}
+
+bool SimuladorDatos::generarDatosDemo(int numRegistros) {
+  std::cout << "Generación de datos demo: " << numRegistros << " registros."
+            << std::endl;
+  std::cout
+      << "Nota: Para datos demo completos, ejecutar ETL desde la interfaz."
+      << std::endl;
+  // TODO: Implementar inserción directa cuando el esquema esté listo
   return true;
 }

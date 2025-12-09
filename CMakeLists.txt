@@ -41,6 +41,8 @@ set(SOURCES
     src/ui/DialogoSucursal.cpp
     src/ui/WidgetFiltrosGlobales.cpp
     src/ui/ExportadorCSV.cpp
+    src/ui/WidgetHistorial.cpp
+    src/ui/GestorFavoritos.cpp
 )
 
 # Ejecutable

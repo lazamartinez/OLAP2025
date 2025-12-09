@@ -1,13 +1,16 @@
 #include "WidgetTablero.h"
 #include "../core/GestorBaseDatos.h"
 #include "ExportadorCSV.h"
+#include "GestorFavoritos.h"
 #include <QDateTime>
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QLabel>
+#include <QMessageBox>
 #include <QVBoxLayout>
 #include <QtCharts/QDateTimeAxis>
 #include <QtCharts/QValueAxis>
+
 
 WidgetTablero::WidgetTablero(QWidget *parent) : QWidget(parent) {
   configurarUi();
@@ -30,6 +33,34 @@ void WidgetTablero::configurarUi() {
       "negocio.<br>"
       "Los datos se actualizan en tiempo real desde el cubo multidimensional.");
   headerLayout->addWidget(titulo);
+
+  headerLayout->addStretch();
+
+  // Botón Favorito
+  QPushButton *btnFavorito = new QPushButton("⭐ Favorito", this);
+  btnFavorito->setToolTip("Guardar esta vista como favorita");
+  btnFavorito->setStyleSheet(R"(
+      QPushButton {
+          background-color: #F39C12;
+          color: white;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 4px;
+          font-weight: 600;
+      }
+      QPushButton:hover {
+          background-color: #E67E22;
+      }
+  )");
+  connect(btnFavorito, &QPushButton::clicked, [this]() {
+    QVariantMap config;
+    config["tipo"] = "dashboard";
+    config["vista"] = "ventas_ejecutivo";
+    GestorFavoritos::agregarFavorito("Dashboard Ventas", "dashboard", config);
+    QMessageBox::information(this, "Favorito",
+                             "Vista guardada en favoritos ⭐");
+  });
+  headerLayout->addWidget(btnFavorito);
 
   QPushButton *btnActualizar = new QPushButton("🔄 Actualizar Datos", this);
   btnActualizar->setCursor(Qt::PointingHandCursor);

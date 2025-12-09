@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 
-
 /**
  * @brief Genera datos sintéticos (CSVs) para simular transaccionalidad OLTP.
  */
@@ -19,6 +18,9 @@ public:
 
   SimuladorDatos();
   bool generarDatos(const ConfiguracionSimulacion &config);
+
+  // Generar datos demo en memoria (sin archivos)
+  static bool generarDatosDemo(int numRegistros = 100000);
 
 private:
   std::mt19937 m_rng;
