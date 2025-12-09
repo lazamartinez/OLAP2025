@@ -1,11 +1,11 @@
 #include "WidgetVisor3D.h"
 #include <QCoreApplication>
 #include <QDebug>
+#include <QFile>
 #include <QQmlContext>
 #include <QQuickItem>
 #include <QTimer>
 #include <QVBoxLayout>
-
 
 WidgetVisor3D::WidgetVisor3D(QWidget *parent)
     : QWidget(parent), m_cuboRef(nullptr) {
@@ -19,24 +19,35 @@ WidgetVisor3D::WidgetVisor3D(QWidget *parent)
   QString qmlPath =
       QCoreApplication::applicationDirPath() + "/../src/ui/Visor3D.qml";
 
-  qDebug() << "Cargando QML desde:" << qmlPath;
+  qDebug() << "===========================================";
+  qDebug() << "VISOR 3D - Intentando cargar QML";
+  qDebug() << "Ruta QML:" << qmlPath;
+  qDebug() << "Archivo existe:" << QFile::exists(qmlPath);
+  qDebug() << "===========================================";
+
   m_quickWidget->setSource(QUrl::fromLocalFile(qmlPath));
 
   if (m_quickWidget->status() == QQuickWidget::Error) {
-    qCritical() << "Error cargando QML:" << m_quickWidget->errors();
+    qCritical() << "❌ ERROR CARGANDO QML!";
+    qCritical() << "Errores:" << m_quickWidget->errors();
     qCritical() << "Ruta intentada:" << qmlPath;
   } else {
-    qDebug() << "QML cargado exitosamente";
+    qDebug() << "✅ QML cargado exitosamente";
+    qDebug() << "Status:" << m_quickWidget->status();
 
     // Cargar datos de prueba después de un pequeño delay
-    QTimer::singleShot(500, this, [this]() { cargarDatosPrueba(); });
+    QTimer::singleShot(1000, this, [this]() {
+      qDebug() << "⏰ Timer: Cargando datos de prueba...";
+      cargarDatosPrueba();
+    });
   }
 
   layout->addWidget(m_quickWidget);
 }
 
 void WidgetVisor3D::cargarDatosPrueba() {
-  qDebug() << "Cargando datos de prueba para Visor 3D...";
+  qDebug() << "===========================================";
+  qDebug() << "📦 Cargando datos de prueba para Visor 3D...";
 
   // Generar grid 5x5x5 de voxels
   QVariantList listaVoxels;
@@ -53,17 +64,22 @@ void WidgetVisor3D::cargarDatosPrueba() {
     }
   }
 
-  qDebug() << "Generados" << listaVoxels.size() << "voxels de prueba";
+  qDebug() << "📊 Generados" << listaVoxels.size() << "voxels de prueba";
 
   QObject *rootObject = m_quickWidget->rootObject();
   if (rootObject) {
+    qDebug() << "✅ Root object disponible";
+    qDebug() << "🔧 Llamando setData() en QML...";
+
     QMetaObject::invokeMethod(
         rootObject, "setData",
         Q_ARG(QVariant, QVariant::fromValue(listaVoxels)));
-    qDebug() << "Datos enviados a QML";
+
+    qDebug() << "✅ Datos enviados a QML";
   } else {
-    qWarning() << "Root Object de QML no disponible";
+    qCritical() << "❌ Root Object de QML NO disponible!";
   }
+  qDebug() << "===========================================";
 }
 
 void WidgetVisor3D::cargarDatos(SistemaOLAP::Nucleo::CuboDatos *cubo) {
