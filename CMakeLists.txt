@@ -38,6 +38,9 @@ set(SOURCES
     src/SistemaOLAP/Nucleo/ProcesadorConsultas.cpp
     src/SistemaOLAP/Analitica/GestorAnalitica.cpp
     src/ui/WidgetVisor3D.cpp
+    src/ui/DialogoSucursal.cpp
+    src/ui/WidgetFiltrosGlobales.cpp
+    src/ui/ExportadorCSV.cpp
 )
 
 # Ejecutable

@@ -1,5 +1,6 @@
 #include "WidgetTablero.h"
 #include "../core/GestorBaseDatos.h"
+#include "ExportadorCSV.h"
 #include <QDateTime>
 #include <QHBoxLayout>
 #include <QHeaderView>
@@ -13,7 +14,7 @@ WidgetTablero::WidgetTablero(QWidget *parent) : QWidget(parent) {
 }
 
 void WidgetTablero::configurarUi() {
-  this->setStyleSheet(""); // Reset to default/global
+  this->setStyleSheet("background-color: transparent;");
   QVBoxLayout *layout = new QVBoxLayout(this);
   layout->setSpacing(20);
   layout->setContentsMargins(40, 40, 40, 40);
@@ -24,11 +25,17 @@ void WidgetTablero::configurarUi() {
   titulo->setStyleSheet(
       "font-size: 24px; font-weight: bold; color: #333; border-bottom: 2px "
       "solid #2a82da; padding-bottom: 10px;");
+  titulo->setToolTip(
+      "<b>Dashboard OLAP</b><br>Vista consolidada de métricas clave del "
+      "negocio.<br>"
+      "Los datos se actualizan en tiempo real desde el cubo multidimensional.");
   headerLayout->addWidget(titulo);
 
-  QPushButton *btnActualizar = new QPushButton("Actualizar Datos", this);
+  QPushButton *btnActualizar = new QPushButton("🔄 Actualizar Datos", this);
   btnActualizar->setCursor(Qt::PointingHandCursor);
   btnActualizar->setFixedWidth(150);
+  btnActualizar->setToolTip("<b>Refrescar Dashboard</b><br>Ejecuta las queries "
+                            "OLAP para obtener los datos más recientes.");
   btnActualizar->setStyleSheet(
       "QPushButton { background-color: #2a82da; color: white; border: none; "
       "padding: 8px; border-radius: 4px; font-weight: 600; } "
@@ -57,12 +64,18 @@ void WidgetTablero::configurarUi() {
   m_vistaGrafico->setMinimumHeight(350);
   m_vistaGrafico->setStyleSheet(
       "border: 1px solid #ddd; border-radius: 5px; background: white;");
+  m_vistaGrafico->setToolTip(
+      "<b>Serie Temporal</b><br>Evolución de ingresos agregados por mes.<br>"
+      "Técnica OLAP: <i>Roll-up</i> temporal.");
   layout->addWidget(m_vistaGrafico);
 
   // Tabla Pivot
   QLabel *lblPivot = new QLabel("Desempeño por Categoría");
   lblPivot->setStyleSheet(
       "margin-top: 10px; color: #333; font-weight: bold; font-size: 16px;");
+  lblPivot->setToolTip(
+      "<b>Tabla Pivot OLAP</b><br>Cruce de dimensiones: Categoría × Región<br>"
+      "Medidas: Total Ventas, Cantidad de Transacciones");
   layout->addWidget(lblPivot);
 
   m_tablaPivot = new QTableView(this);
@@ -77,11 +90,14 @@ void WidgetTablero::configurarUi() {
       "QTableView { background-color: #ffffff; gridline-color: #e0e0e0; color: "
       "#333; border: 1px solid #ddd; }"
       "QHeaderView::section { background-color: #f5f5f5; color: #333; border: "
-      "nne; padding: 5px; font-weight: bold; border-bottom: 1px solid #ddd; }"
+      "none; padding: 5px; font-weight: bold; border-bottom: 1px solid #ddd; }"
       "QTableView::item:selected { background-color: #e6f7ff; color: #333; }"
       "QTableView::item { padding: 5px; }");
 
   layout->addWidget(m_tablaPivot);
+
+  // Botón Export CSV
+  ExportadorCSV::agregarBotonExport(this, m_tablaPivot, "ventas_por_categoria");
 
   actualizarDatos(); // Carga inicial
 }

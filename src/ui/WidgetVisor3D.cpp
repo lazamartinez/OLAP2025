@@ -1,9 +1,9 @@
 #include "WidgetVisor3D.h"
+#include <QCoreApplication>
 #include <QDebug>
 #include <QQmlContext>
 #include <QQuickItem>
 #include <QVBoxLayout>
-
 
 WidgetVisor3D::WidgetVisor3D(QWidget *parent)
     : QWidget(parent), m_cuboRef(nullptr) {
@@ -12,10 +12,15 @@ WidgetVisor3D::WidgetVisor3D(QWidget *parent)
 
   m_quickWidget = new QQuickWidget(this);
   m_quickWidget->setResizeMode(QQuickWidget::SizeRootObjectToView);
-  m_quickWidget->setSource(QUrl::fromLocalFile("src/ui/Visor3D.qml"));
+
+  // Usar ruta absoluta basada en el ejecutable
+  QString qmlPath =
+      QCoreApplication::applicationDirPath() + "/../src/ui/Visor3D.qml";
+  m_quickWidget->setSource(QUrl::fromLocalFile(qmlPath));
 
   if (m_quickWidget->status() == QQuickWidget::Error) {
     qCritical() << "Error cargando QML:" << m_quickWidget->errors();
+    qCritical() << "Intentando cargar desde:" << qmlPath;
   }
 
   layout->addWidget(m_quickWidget);

@@ -3,10 +3,16 @@
 #include "SistemaOLAP/Nucleo/MotorETL.h"
 #include "WidgetAnalitica.h"
 #include "WidgetEtl.h"
+#include "WidgetFiltrosGlobales.h"
 #include "WidgetMapa.h"
 #include "WidgetTablero.h"
 #include "WidgetVisor3D.h"
+#include <QDebug>
+#include <QHBoxLayout>
+#include <QListWidget>
 #include <QRandomGenerator>
+#include <QSettings>
+#include <QStackedWidget>
 #include <QStatusBar>
 #include <QTabWidget>
 #include <QTimer>
@@ -37,27 +43,6 @@ void VentanaPrincipal::configurarUi() {
           background: #FFFFFF;
           border-radius: 6px;
           top: -1px;
-      }
-      QTabBar::tab {
-          background: #E8ECEF;
-          color: #576574;
-          padding: 12px 24px;
-          margin-right: 6px;
-          border-top-left-radius: 6px;
-          border-top-right-radius: 6px;
-          font-weight: 600;
-          border: 1px solid #DCE1E7;
-          border-bottom: none;
-      }
-      QTabBar::tab:selected {
-          background: #FFFFFF;
-          color: #2980B9;
-          border-top: 3px solid #2980B9;
-          border-bottom: 2px solid #FFFFFF; /* Merge with pane */
-      }
-      QTabBar::tab:hover {
-          background: #FDFDFD;
-          color: #2980B9;
       }
       QStatusBar {
           background: #FFFFFF;
@@ -91,7 +76,21 @@ void VentanaPrincipal::configurarUi() {
   QWidget *widgetCentral = new QWidget(this);
   this->setCentralWidget(widgetCentral);
 
-  QHBoxLayout *mainLayout = new QHBoxLayout(widgetCentral);
+  QVBoxLayout *layoutPrincipal = new QVBoxLayout(widgetCentral);
+  layoutPrincipal->setContentsMargins(0, 0, 0, 0);
+  layoutPrincipal->setSpacing(0);
+
+  // --- FILTROS GLOBALES ---
+  m_filtrosGlobales = new WidgetFiltrosGlobales(this);
+  m_filtrosGlobales->setStyleSheet(
+      "background-color: #FFFFFF; border-bottom: 1px solid #DCE1E7;");
+  layoutPrincipal->addWidget(m_filtrosGlobales);
+
+  connect(m_filtrosGlobales, &WidgetFiltrosGlobales::filtrosActualizados, this,
+          &VentanaPrincipal::aplicarFiltrosGlobales);
+
+  // --- CONTENIDO PRINCIPAL ---
+  QHBoxLayout *mainLayout = new QHBoxLayout();
   mainLayout->setContentsMargins(0, 0, 0, 0);
   mainLayout->setSpacing(0);
 
@@ -125,7 +124,7 @@ void VentanaPrincipal::configurarUi() {
       }
   )");
 
-  // Sidebar Items with Icons (unicode fallback for now)
+  // Sidebar Items with Icons
   sidebar->addItem("  📊  Inicio / Resumen");
   sidebar->addItem("  🔄  Consola ETL (Carga)");
   sidebar->addItem("  🌍  Mapa Geo-Espacial");
@@ -134,11 +133,14 @@ void VentanaPrincipal::configurarUi() {
 
   mainLayout->addWidget(sidebar);
 
+  layoutPrincipal->addLayout(mainLayout);
+
   // --- 2. CONTENT AREA (STACKED) ---
   QStackedWidget *stackedWidget = new QStackedWidget(this);
   mainLayout->addWidget(stackedWidget);
 
   // Módulos
+
   // Page 0: Dashboard (Inicio)
   WidgetTablero *tablero = new WidgetTablero(this);
   stackedWidget->addWidget(tablero);
@@ -173,27 +175,96 @@ void VentanaPrincipal::configurarUi() {
 
   // --- Motor de Simulación en Tiempo Real (Demo) ---
   QTimer *timerSimulacion = new QTimer(this);
-  connect(timerSimulacion, &QTimer::timeout, this, [this, mapa, visor3d]() {
+  // Use 'visor3d' in capture if needed, though not used in body, so removed to
+  // avoid unused variable warning
+  connect(timerSimulacion, &QTimer::timeout, this, [this, mapa]() {
     // 1. Simular nueva transacción de venta
-    double monto = QRandomGenerator::global()->bounded(50.0, 5000.0);
+    double monto = QRandomGenerator::global()->bounded(
+        50, 5000); // Int arg for ambiguity resolution
     QStringList ciudades = {"Buenos Aires", "New York", "London",
                             "Tokyo",        "Moscow",   "Cordoba"};
-    QString origen =
-        ciudades[QRandomGenerator::global()->bounded((int)ciudades.size())];
-    QString destino =
-        ciudades[QRandomGenerator::global()->bounded((int)ciudades.size())];
+
+    int idxOrigen = QRandomGenerator::global()->bounded((int)ciudades.size());
+    int idxDestino = QRandomGenerator::global()->bounded((int)ciudades.size());
+
+    QString origen = ciudades[idxOrigen];
+    QString destino = ciudades[idxDestino];
 
     // Enviar a Mapa
     mapa->procesarVenta(origen, destino, monto);
-
-    // Enviar a Data Cube (Simulado)
-    // m_cuboDatos->registrarHecho(...);
   });
   timerSimulacion->start(800); // 1 venta cada 0.8 segundos
 
-  layoutPrincipal->addWidget(m_tabWidget);
-  this->setCentralWidget(widgetCentral);
+  // Status Bar with Theme Toggle
+  QStatusBar *statusBar = new QStatusBar(this);
+  setStatusBar(statusBar);
 
-  this->statusBar()->showMessage("Sistema OLAP 3D Inicializado. Motor ETL: "
-                                 "Listo. Cubo MOLAP: Cargado (Voxels).");
+  // Cargar preferencia de tema
+  QSettings settings("OLAP2025", "Sistema");
+  m_temaOscuro = settings.value("tema/oscuro", false).toBool();
+
+  m_actionTema =
+      new QAction(m_temaOscuro ? "☀️ Modo Claro" : "🌙 Modo Oscuro", this);
+  m_actionTema->setToolTip("Cambiar entre tema claro y oscuro");
+  connect(m_actionTema, &QAction::triggered, this,
+          &VentanaPrincipal::toggleTema);
+  statusBar->addPermanentWidget(new QPushButton(m_actionTema->text()));
+
+  QPushButton *btnTema =
+      qobject_cast<QPushButton *>(statusBar->children().last());
+  if (btnTema) {
+    btnTema->setFlat(true);
+    btnTema->setCursor(Qt::PointingHandCursor);
+    connect(btnTema, &QPushButton::clicked, this,
+            &VentanaPrincipal::toggleTema);
+  }
+
+  statusBar->showMessage("Sistema OLAP 2025 Inicializado. Motor ETL: "
+                         "Listo. Cubo MOLAP: Cargado (Voxels).");
+}
+
+void VentanaPrincipal::toggleTema() {
+  m_temaOscuro = !m_temaOscuro;
+  aplicarTema(m_temaOscuro);
+
+  // Guardar preferencia
+  QSettings settings("OLAP2025", "Sistema");
+  settings.setValue("tema/oscuro", m_temaOscuro);
+
+  m_actionTema->setText(m_temaOscuro ? "☀️ Modo Claro" : "🌙 Modo Oscuro");
+  statusBar()->showMessage(
+      m_temaOscuro ? "Tema oscuro activado" : "Tema claro activado", 2000);
+}
+
+void VentanaPrincipal::aplicarTema(bool oscuro) {
+  if (oscuro) {
+    // Tema Oscuro
+    setStyleSheet(R"(
+      QMainWindow { background-color: #1E1E1E; }
+      QWidget { color: #E0E0E0; }
+      QListWidget { background-color: #2D2D30; border-right: 1px solid #3E3E42; }
+      QListWidget::item { color: #CCCCCC; }
+      QListWidget::item:selected { background-color: #3E3E42; color: #2980B9; }
+    )");
+  } else {
+    // Tema Claro (actual)
+    setStyleSheet(R"(
+      QMainWindow { background-color: #F4F6F9; }
+      QWidget { color: #2C3E50; }
+    )");
+  }
+}
+
+void VentanaPrincipal::aplicarFiltrosGlobales(const QString &region,
+                                              const QDate &inicio,
+                                              const QDate &fin) {
+  qDebug() << "Filtros aplicados:" << region << inicio << fin;
+  statusBar()->showMessage(QString("Filtros: %1 | %2 - %3")
+                               .arg(region)
+                               .arg(inicio.toString("dd/MM/yyyy"))
+                               .arg(fin.toString("dd/MM/yyyy")),
+                           3000);
+
+  // TODO: Propagar filtros a widgets (Tablero, Analytics, Mapa)
+  // Cada widget debería tener un método aplicarFiltros(region, inicio, fin)
 }
