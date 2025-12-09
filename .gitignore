@@ -1,0 +1,15 @@
+build/
+.vscode/
+.idea/
+*.user
+*.exe
+*.dll
+*.o
+*.obj
+*.a
+*.lib
+compile_commands.json
+.ninja_*
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
