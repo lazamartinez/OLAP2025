@@ -1,6 +1,9 @@
 #include "WidgetVisor3DDual.h"
+#include <QDebug>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QQuickWidget>
+#include <QTimer>
 #include <QVBoxLayout>
 
 
@@ -57,7 +60,38 @@ WidgetVisor3DDual::WidgetVisor3DDual(QWidget *parent) : QWidget(parent) {
   m_visorSimple = new WidgetVisor3DSimple(this);
   m_stack->addWidget(m_visorSimple);
 
-  m_stack->setCurrentIndex(0); // Empezar con QML
+  // Auto-detectar si QML funciona y hacer fallback
+  QTimer::singleShot(200, this, [this, titulo]() {
+    // Verificar si QML cargó correctamente
+    if (m_visorQML) {
+      auto *quickWidget = m_visorQML->findChild<QQuickWidget *>();
+      if (quickWidget && quickWidget->status() == QQuickWidget::Error) {
+        qWarning() << "⚠️ QtQuick3D no disponible, usando versión Simple "
+                      "automáticamente";
+        m_stack->setCurrentIndex(1);
+        m_usandoQML = false;
+        m_btnToggle->setText("⚠️ QML No Disponible");
+        m_btnToggle->setEnabled(false);
+        m_btnToggle->setStyleSheet(R"(
+                    QPushButton {
+                        background-color: #95A5A6;
+                        color: white;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 4px;
+                    }
+                )");
+        m_btnToggle->setToolTip(
+            "<b>QtQuick3D No Instalado</b><br>Usando versión Simple "
+            "(QPainter)<br>Para activar QML: instalar Qt Quick 3D");
+        titulo->setText("🧊 Visor 3D OLAP (Modo Simple)");
+        titulo->setStyleSheet(
+            "font-size: 18px; font-weight: bold; color: #E67E22;");
+      }
+    }
+  });
+
+  m_stack->setCurrentIndex(0); // Intentar con QML primero
   layout->addWidget(m_stack);
 }
 
